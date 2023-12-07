@@ -8,7 +8,13 @@ def lineToSchematic(line : str):
 file1 = open('engineParts.txt', 'r')
 Lines = file1.readlines()
 """ ------- index all occurrences of all symbols in each line --------- """
-symbols = ['*']
+
+# for part 1
+symbols = ['*', '#', '$', '%', '&', '-', '+', '=', '/', '@']
+
+# for part 2
+#symbols = ['*']
+
 coordSymbols = [] 
 row = 0
 for line in Lines:
