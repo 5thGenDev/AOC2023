@@ -27,6 +27,8 @@ currentTitle = ""
 file1 = open('demo.txt', 'r')
 Lines = file1.readlines()
 
+# Convert seed line into a list of tuple (for part 2)
+# Convert each map into 2D tensor
 for line in Lines:
     line = line.split("\n")[0]
     if line == '':
@@ -41,6 +43,7 @@ for line in Lines:
         x = tensor([list(map(int, line.split(' ')))])
         titles[currentTitle] = cat((titles[currentTitle], x), dim=0)
 
+# Filling the gaps in each map
 for title in titles.keys():
     x = titles[title]
     sorted_values, sorted_indices = torch.sort(x[:, 0])
@@ -52,6 +55,7 @@ for title in titles.keys():
     new_row = tensor([[x[-1,0] + x[-1,2], x[-1,0] + x[-1,2], 1000]])
     titles[title] = cat((titles[title], new_row), dim=0)
 
+# Actually finding the right seed. The problem is treated as graph traversal but visited node can be revisited so that's the tricky part
 row = (titles['humidity-to-location map:'])[0]
 start_node = torch.stack((row[0], row[1], row[2], tensor(0)), dim=0)
 print(dfs_iterative(start_node))
