@@ -1,3 +1,5 @@
+''' This file contains all utilities functions that is necessity for part 2
+'''
 import torch
 from torch import tensor
 
@@ -45,3 +47,27 @@ def get_connected_nodes(node):
         # Sort based on the first element in dimension 0
         connected_nodes = sorted(connected_nodes, key=lambda x: x[0], reverse=True)
     return connected_nodes
+
+# Progagate universal src from final to start node (from seed -> location) 
+# whenever source of current_node > destination of child_node
+# final result of universal src = virtual minimum seed
+# so the final condition is just to find if any seed range can cover virtual minimum seed
+def find_universal_src(node, predecessor : dict):
+    propagation_path = []
+    current_node = node 
+    universal_src = current_node[1]
+    while current_node is not None:
+        # propagation_path only contains child_nodes
+        propagation_path.append(current_node)
+        child_node = current_node
+        current_node = predecessor[current_node] # get value from dict()
+        if current_node is not None:
+            if current_node[1] > child_node[0]:
+                src = universal_src
+                for successor_node in propagation_path:
+                    # destination in child_node -> source in parent_node
+                    src = src + (successor_node[0] - successor_node[1])
+                if current_node[1] > src:
+                    universal_src = universal_src + (current_node[1] - src)
+
+    return universal_src
